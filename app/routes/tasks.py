@@ -3,7 +3,7 @@ from flask import Flask, request, Blueprint, render_template, redirect, url_for,
 from app import db
 from app.models import Task
 
-task_bp = Blueprint('tasks', __name__)
+tasks_bp = Blueprint('tasks', __name__)
 
 @tasks_bp.route('/')
 def view_tasks():
