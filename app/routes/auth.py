@@ -16,12 +16,13 @@ def login():
         if username == USER_CREDENTIALS['username'] and password == USER_CREDENTIALS['password']:
             session['user'] = username
             flash('Login successful!', 'success')
+            return redirect(url_for('tasks.view_tasks'))  # Assuming you have a route to view tasks
         else:
             flash('Invalid credentials. Please try again.', 'danger')
     
     return render_template('login.html')
 
-@auth_bp.route('/logout ')
+@auth_bp.route('/logout')
 def logout():
     session.pop('user', None)
     flash('You have been logged out.', 'info')

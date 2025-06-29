@@ -1,56 +1,46 @@
-{{%extends base.html %}}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tasks</title>
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"> -->
-</head>
-{{% block title %}Tasks{% endblock %}}
-<body>
+{% extends "base.html" %}
+
+{% block title %}Tasks{% endblock %}
+
+{% block content %}
     <h1>TASKS TO DO..</h1>
-    <form action="url_for('tasks.add_tasks')" method="POST" class="task-form">
+
+    <form action="{{ url_for('tasks.add_task') }}" method="POST" class="task-form">
         <input type="text" name="title" placeholder="Enter task title" required>
-        <button type="submit" >Add Task</button>
+        <button type="submit">Add Task</button>
     </form>
 
-    {{% if tasks %}}
-    <form action="url_for('tasks.delete')" method="POST" class>
-        <button type="submit" class="btn btn-clear">Delete Task</button>
-    </form>
-    <br>
+    {% if tasks %}
+        <form action="{{ url_for('tasks.clear_tasks') }}" method="POST">
+            <button type="submit" class="btn btn-clear">Delete Task</button>
+        </form>
+        <br>
 
-    <table class="task-table">
-        <thead>
-            <tr>
-                <th>Task</th>
-                <th>Status</th>
-                <th>Change</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for task in tasks %}
-            <tr>
-                <td>{{ task.index }}</td>
-                <td>{{ task.title }}</td>
-                <td><span class = "badge {{ task.status|lower}}">{{task.status}}</span></td>
-                <td>
-                    <form action="url_for('tasks.toggle', task_id = task_id)" method="POST">
-                        <button class="btn-small" type="submit"> Next </button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    {{%else%}}
-    <p>No tasks currently so add one above!! </p>
-    {{% endif %}}
-
-</body>
-</html>
-
-
-{{% endblock %}}
+        <table class="task-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Task</th>
+                    <th>Status</th>
+                    <th>Change</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ task.title }}</td>
+                    <td><span class="badge {{ task.status|lower }}">{{ task.status }}</span></td>
+                    <td>
+                        <form action="{{ url_for('tasks.toggle', task_id=task.id) }}" method="POST">
+                            <button class="btn-small" type="submit">Next</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No tasks currently, so add one above!!</p>
+    {% endif %}
+{% endblock %}

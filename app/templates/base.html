@@ -7,30 +7,32 @@
     <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"> -->
 </head>
 <body> 
-    <Header>
+    <header>
         <div class="container">
-            <h1>My todo App</h1>
+            <h1>My Todo App</h1>
             <nav>
-                <a href="{{ url_for('task.view_tasks') }}">Home</a>
-                {{ if 'user' in session }}
-                <a href="{{url_for('auth.login')}}">Logout</a>
-                {{ else }} 
-                <a href="{{url_for('auth.login')}}">Login</a>
-                {{% endif %}}
+                <a href="{{ url_for('tasks.view_tasks') }}">Home</a>
+                {% if 'user' in session %}
+                    <a href="{{ url_for('auth.logout') }}">Logout</a>
+                {% else %} 
+                    <a href="{{ url_for('auth.login') }}">Login</a>
+                {% endif %}
             </nav>
         </div>
-    </Header>
-
+    </header>
 
     <main>
         <div class="container">
             {% with messages = get_flashed_messages(with_categories=True) %}
-                {{for category, message in messages}}
-                <div class="flash-{{ category }}"> {{ message }}</div>
-                {{% endfor %}}
-                {{% endwith %}}
+    {% for category, message in messages %}
+        <div class="flash-{{ category }}">{{ message }}</div>
+    {% endfor %}
+        {% endwith %}
 
+        
             {% block content %}
             {% endblock %}
+        </div>
+    </main>
 </body>
 </html>
