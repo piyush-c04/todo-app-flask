@@ -1,14 +1,19 @@
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
-
+from dotenv import load_dotenv
+import os
+load_dotenv()
 #create a SQLAlchemy instance
 db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__)
     
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///todo.db'
-    app.config['SECRET_KEY'] = 'your_secret_key_here'
+    app.secret_key = os.environ.get("SECRET_KEY", "fallback-key")
+    app.db_url = os.environ.get("DATABASE_URL", "sqlite:///todo.db")
+    
+    app.config['SQLALCHEMY_DATABASE_URI'] = app.db_url
+    app.config['SECRET_KEY'] = app.secret_key
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False   
 
     #Link the SQLAlchemy instance to the Flask app
