@@ -1,6 +1,6 @@
-# 📝 ToDo App (Flask + Docker)
+# 📝 ToDo App (Flask + Docker + Deployment on Kubernetes)
 
-A simple yet functional ToDo web application built with **Flask**, styled using **HTML/CSS**, and packaged using **Docker** for easy deployment and portability.
+A simple yet functional ToDo web application built with **Flask**, styled using **HTML/CSS**, and packaged using **Docker** for easy deployment and portability ,Deployed for scalability via **Kubernetes**.
 
 ---
 ![Screenshot (290)](https://github.com/user-attachments/assets/184e72f5-8a49-494b-a7b1-ca5814226ec6)
@@ -12,6 +12,7 @@ A simple yet functional ToDo web application built with **Flask**, styled using 
 * 📓 SQLite-based persistent storage
 * 🐳 Dockerized for easy containerized deployment
 * ♻️ Modular structure using Flask application factory
+* ⎈️ Supports full Kubernetes deployment
 
 -
 ![Screenshot (292)](https://github.com/user-attachments/assets/7fb0f0b2-a051-454f-830b-76ca8462015b)
@@ -36,7 +37,7 @@ A simple yet functional ToDo web application built with **Flask**, styled using 
 | Backend                | Python 3.11, Flask     |
 | Frontend               | HTML, CSS              |
 | Database               | SQLite                 |
-| Containerization       | Docker                 |
+| Containerization       | Docker, Kubernetes     |
 | Environment Management | Python `venv` + `.env` |
 
 ---
@@ -57,6 +58,9 @@ todo-app-flask/
 ├── run.py                  # App entry point
 ├── requirements.txt        # Python dependencies
 ├── Dockerfile              # Docker build instructions
+├── configmap.yaml          # Kuberenetes: to store application-specific configurations
+├── deployment.yaml         # Manage replicated Pods, providing declarative updates and rollbacks
+├── services.yaml           # Expose your applications running in Pods to the network
 ├── .env                    # Env config (not committed)
 ├── .gitignore              # Git ignored files
 └── README.md               # You're here
@@ -70,9 +74,12 @@ todo-app-flask/
 
 * [Python 3.11+](https://www.python.org/)
 * [Docker](https://www.docker.com/)
+* [Minikube or Kubernetes cluster](https://minikube.sigs.k8s.io/docs/start/)
 * Git
+
 ---
-## Docker Image Building and Containerization:
+
+## 📦 Docker Image Building and Containerization:
 ![Screenshot (300)](https://github.com/user-attachments/assets/3cd18791-7233-43d4-89d7-49e8d506484c)
 --
 ![Screenshot (301)](https://github.com/user-attachments/assets/2ddbf323-7e14-42be-89cf-b7b4b54b5a1a)
@@ -114,16 +121,59 @@ docker run -p 5000:5000 --env-file .env todo-flask-app
 
 ---
 
+## ⎈️ Kubernetes Deployment (Full Container Orchestration)
+
+This project fully supports running on a **Kubernetes cluster**, enabling horizontal scaling, declarative infrastructure, and production-grade orchestration.
+
+### 🧾 Required Manifests:
+- `configmap.yaml` — Stores environment variables
+- `deployment.yaml` — Deploys Flask app as a containerized pod
+- `service.yaml` — Exposes the app via NodePort
+
+### 🚀 Deploy Steps:
+![Screenshot (305)](https://github.com/user-attachments/assets/95aa8a97-e485-4cc0-a668-bbea903b8f94)
+![Screenshot (306)](https://github.com/user-attachments/assets/c125efab-7616-4af8-967a-c852005ef830)
+![Screenshot (307)](https://github.com/user-attachments/assets/f7836003-073f-4c55-a525-ece4fd91658e)
+
+```bash
+kubectl apply -f configmap.yaml
+kubectl apply -f deployment.yaml
+kubectl apply -f service.yaml
+```
+
+### 🌐 Access Options:
+![Screenshot (309)](https://github.com/user-attachments/assets/b93a2718-1002-4a4f-bc83-ca7e4393e6ab)
+![Screenshot (310)](https://github.com/user-attachments/assets/d79ff513-a766-495b-ae34-10c5cb891e81)
+
+- Recommended: 
+  ```bash
+  minikube service todo-app-service
+  ```
+- Alternate:
+  ```bash
+  minikube tunnel   # Then open http://localhost:30007
+  ```
+- Temporary dev access:
+  ```bash
+  kubectl port-forward service/todo-app-service 5000:5000
+  ```
+
+> ⚠️ Note: SQLite is ephemeral in Kubernetes. For persistent or multi-replica setups, consider PostgreSQL with Persistent Volumes or StatefulSets.
+![Screenshot (311)](https://github.com/user-attachments/assets/07bf51f1-b062-4e20-9995-6005e2be4198)
+
+---
+
 ## 📦 ToDo for Future Versions
 
 * [ ] Add user authentication
 * [ ] Deploy with Gunicorn & Nginx
 * [ ] Add PostgreSQL & Docker Compose
-* [ ] Add CI/CD with GitHub Actions
+* [ ] Add CI/CD with GitHub Actions / Jenkins
+* [ ] Add Persistent Volume or PostgreSQL for Kubernetes
+
 (SRC @master branch)
 ---
 
 ## 🤝 Contributing
 
 Contributions are welcome! Feel free to fork this repo, create a feature branch, and open a pull request.
-
