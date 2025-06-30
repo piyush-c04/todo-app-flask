@@ -1,20 +1,26 @@
-# Use official Python base image
+# Use a slim official Python image
 FROM python:3.11-slim
 
-# Set working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy dependency file
+# Copy only requirements first (for better caching)
 COPY requirements.txt .
 
-# Install dependencies
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the project
+# Copy the entire app source code from folder todo
 COPY . .
 
-# Expose port Flask runs on
+# Make sure the DB file (if it exists locally) is copied in
+COPY instance/todo.db ./todo.db
+
+# Expose Flask port
 EXPOSE 5000
 
-# Run the Flask app
-CMD ["python", "app.py"]
+# Set environment variable for Flask
+ENV FLASK_APP=app.py
+
+# Command to run the app
+CMD ["python", "run.py"]
